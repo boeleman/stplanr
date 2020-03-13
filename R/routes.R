@@ -285,8 +285,10 @@ route_graphhopper <- function(from, to, l = NULL, vehicle = "bike",
 #  if (vehicle == "bike") {
   if (grepl( "bike", vehicle)) {
     change_elev <- obj$path$descend + obj$paths$ascend
+    htot <- abs(obj$path$descend) + abs(obj$paths$ascend)
   } else {
     change_elev <- NA
+    htot <- NA
   }
 
   # Attribute data for the route
@@ -294,8 +296,8 @@ route_graphhopper <- function(from, to, l = NULL, vehicle = "bike",
     time = obj$paths$time / (1000 * 60),
 #    dist = obj$paths$distance,
     length = obj$paths$distance,
-#    change_elev = change_elev
-    av_incline = change_elev
+    change_elev = change_elev
+    av_incline = htot/obj$paths$distance
   )
 
   route <- sp::SpatialLinesDataFrame(route, df)
