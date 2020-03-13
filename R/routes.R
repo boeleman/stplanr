@@ -292,7 +292,8 @@ route_graphhopper <- function(from, to, l = NULL, vehicle = "bike",
   # Attribute data for the route
   df <- data.frame(
     time = obj$paths$time / (1000 * 60),
-    dist = obj$paths$distance,
+#    dist = obj$paths$distance,
+    length = obj$paths$distance,
 #    change_elev = change_elev
     av_incline = change_elev
   )
