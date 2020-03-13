@@ -231,7 +231,8 @@ route_cyclestreets <- function(from, to, plan = "fastest", silent = TRUE, pat = 
 #' }
 route_graphhopper <- function(from, to, l = NULL, vehicle = "bike",
                               silent = TRUE, pat = NULL,
-                              base_url = "https://graphhopper.com") {
+#                              base_url = "https://graphhopper.com") {
+                              base_url = "https://graphhopper.com/api/1") {
 
   # Convert character strings to lon/lat if needs be
   coords <- od_coords(from, to, l)
@@ -242,7 +243,8 @@ route_graphhopper <- function(from, to, l = NULL, vehicle = "bike",
 
   httrmsg <- httr::modify_url(
     base_url,
-    path = "/api/1/route",
+#    path = "/api/1/route",
+    path = "/route",
     query = list(
       point = paste0(coords[1, c("fy", "fx")], collapse = ","),
       point = paste0(coords[1, c("ty", "tx")], collapse = ","),
@@ -280,7 +282,8 @@ route_graphhopper <- function(from, to, l = NULL, vehicle = "bike",
   climb <- NA # to set elev variable up
 
   # get elevation data if it was a bike trip
-  if (vehicle == "bike") {
+#  if (vehicle == "bike") {
+  if (grepl( "bike", vehicle)) {
     change_elev <- obj$path$descend + obj$paths$ascend
   } else {
     change_elev <- NA
@@ -290,7 +293,8 @@ route_graphhopper <- function(from, to, l = NULL, vehicle = "bike",
   df <- data.frame(
     time = obj$paths$time / (1000 * 60),
     dist = obj$paths$distance,
-    change_elev = change_elev
+#    change_elev = change_elev
+    av_incline = change_elev
   )
 
   route <- sp::SpatialLinesDataFrame(route, df)
